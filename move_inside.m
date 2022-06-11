@@ -40,10 +40,10 @@ function [Xs_new] = move_inside(Xs, func, grad, outside_test, max_iter=3, tol=1e
         grad_val = dot(grad(r(1), r(2), r(3)), n);
         % solve
         t_hat = t - (grad_val\f_val);
-        if(norm(t_hat - t) < tol)
+        if(abs(t_hat - t) < tol)
           % early stop if parameter doesn't change much
 		      break;
-	      end
+	      endif
         t = t_hat;
       endfor
       x_new = x + t_hat*n;
