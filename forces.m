@@ -1,5 +1,3 @@
-
-
 %Function forces calculates
 %the new position of Xs
 %by calculating the force acting on them
