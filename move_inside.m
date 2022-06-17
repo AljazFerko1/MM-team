@@ -12,7 +12,7 @@
 %grad ... gradiant of function
 %max_iter ... max number of iteration for newton
 %tol ... early stoping threshold for newton
-%outside_test ... that given a point,
+%move_test ... that given a point,
 %                 returns true if the point is
 %                 outside the surface
 %Outputs:
@@ -22,12 +22,12 @@
 %func = @(x,y,z) [x.^2 + y.^2 + z.^2 - 1]
 %grad = @(x,y,z) [2*x, 2*y, 2*z]
 %Xs = [[3,2,1];[0,0,3];[0,0,2];[1,1,1]; [2,2,2]; [5,-2,3]]
-%Xs_new = move_inside(Xs, func, grad, max_iter=3, tol=1e-10, outside_test=@out_sphere)
-function [Xs_new] = move_inside(Xs, func, grad, outside_test, max_iter=3, tol=1e-10)
+%Xs_new = move_inside(Xs, func, grad, max_iter=3, tol=1e-10, move_test=@out_sphere)
+function [Xs_new] = move_inside(Xs, func, grad, move_test, max_iter=3, tol=1e-10)
   Xs_new = [];
   for i=1:rows(Xs)
     x = Xs(i,:);
-    if (outside_test(x(1), x(2), x(3)))
+    if (move_test(x(1), x(2), x(3)))
       n = grad(Xs(i,1),Xs(i,2),Xs(i,3));
       % begin newton
       t = 0;
@@ -35,10 +35,9 @@ function [Xs_new] = move_inside(Xs, func, grad, outside_test, max_iter=3, tol=1e
         % using equation r(t) = x + t*n
         % for newton iteration
         r = x + t*n;        
-        % compute function and grad value
+        % solve the iteration
         f_val = func(r(1), r(2), r(3)) + 1e-10;
         grad_val = dot(grad(r(1), r(2), r(3)), n);
-        % solve
         t_hat = t - (grad_val\f_val);
         if(abs(t_hat - t) < tol)
           % early stop if parameter doesn't change much
